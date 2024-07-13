@@ -184,3 +184,11 @@ sas_token = "${data.azurerm_storage_account_sas.state.sas}"
 
   EOF
 }
+
+# #############################################################################
+# Outputs
+# #############################################################################
+
+output "resource_name_suffix" {
+  value = local.resource_suffix
+}
