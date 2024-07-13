@@ -50,7 +50,7 @@ resource "azapi_resource" "app_service_plan" {
 # #############################################################################
 
 resource "azurerm_storage_account" "function_storage" {
-  name                     = lower("${module.storage_account.name.abbreviation}-${var.storage_account_name}${var.resource_name_suffix}-${var.azure_environment}-${module.azure_regions.region.region_short}")
+  name                     = lower("${module.storage_account.name.abbreviation}${var.storage_account_name}${var.resource_name_suffix}${var.azure_environment}${module.azure_regions.region.region_short}")
   resource_group_name      = data.azurerm_resource_group.function_app_rg.name
   location                 = data.azurerm_resource_group.function_app_rg.location
   account_tier             = "Standard"
@@ -136,16 +136,12 @@ resource "azurerm_role_assignment" "storage_blob_data_owner" {
 }
 
 resource "azurerm_role_assignment" "key_vault_secrets_user" {
-  count = var.key_vault_id != null ? 1 : 0
-
   scope                = var.key_vault_id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = data.azurerm_linux_function_app.new_function_app.identity.0.principal_id
 }
 
 resource "azurerm_role_assignment" "app_configuration_data_owner" {
-  count = var.app_configuration_id != null ? 1 : 0
-
   scope                = var.app_configuration_id
   role_definition_name = "App Configuration Data Owner"
   principal_id         = data.azurerm_linux_function_app.new_function_app.identity.0.principal_id

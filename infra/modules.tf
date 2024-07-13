@@ -32,7 +32,6 @@ module "log_analytics_workspace" {
   resource_type = "log-analytics-workspace"
 }
 
-
 module "application_insights" {
   source = "git::https://github.com/TaleLearnCode/azure-resource-types.git"
   resource_type = "application-insights"
@@ -46,4 +45,9 @@ module "key_vault" {
 module "app_config" {
   source = "git::https://github.com/TaleLearnCode/azure-resource-types.git"
   resource_type = "app-configuration-store"
+}
+
+module "storage_account" {
+  source        = "git::https://github.com/TaleLearnCode/azure-resource-types.git"
+  resource_type = "storage-account"
 }
