@@ -76,4 +76,18 @@ resource "azurerm_api_management" "global" {
   publisher_name      = var.apim_publisher_name
   publisher_email     = var.apim_publisher_email
   sku_name            = var.apim_sku_name
+  tags                = local.global_tags
+}
+
+# -----------------------------------------------------------------------------
+# Storage Account
+# -----------------------------------------------------------------------------
+
+resource "azurerm_storage_account" "global" {
+  name                     = "${module.storage_account.name.abbreviation}crt${var.resource_name_suffix}${var.azure_environment}${module.azure_regions.region.region_short}"
+  resource_group_name      = azurerm_resource_group.global.name
+  location                 = azurerm_resource_group.global.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  tags                     = local.global_tags
 }
