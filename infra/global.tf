@@ -91,3 +91,13 @@ resource "azurerm_storage_account" "global" {
   account_replication_type = "LRS"
   tags                     = local.global_tags
 }
+
+module "global_storage_account_connection_string" {
+  source                 = "./modules/app-config-secret"
+  app_config_label       = var.azure_environment
+  app_config_key         = "Global:StorageAccount:ConnectionString"
+  configuration_store_id = azurerm_app_configuration.remanufacturing.id
+  key_vault_id           = azurerm_key_vault.remanufacturing.id
+  secret_name            = "Global-StorageAccount-ConnectionString"
+  secret_value            = azurerm_storage_account.global.primary_connection_string
+}
