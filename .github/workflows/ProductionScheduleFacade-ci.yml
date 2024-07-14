@@ -20,12 +20,15 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: ./src/ProductionSchedule
 
     - name: Build project
-      run: dotnet build src/ProductionSchedule/ProductionScheduleFacade.sln --configuration Release
-
+      run: dotnet build ProductionScheduleFacade.sln --configuration Release
+      working-directory: ./src/ProductionSchedule
+      
     - name: Publish artifacts
       run: dotnet publish --configuration Release --output ./publish
+      working-directory: ./src/ProductionSchedule
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
