@@ -14,6 +14,7 @@ jobs:
     outputs:
       terraform: ${{ steps.filter.outputs.terraform }}
       production-schedule-facade: ${{ steps.filter.outputs.production-schedule-facade }}
+      get-next-core: ${{ steps.filter.outputs.get-next-core }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -24,6 +25,8 @@ jobs:
               - 'infra/**'
             production-schedule-facade:
               - 'src/ProductionSchedule/**'
+            get-next-core:
+              - 'src/GetNextCore/**'
 
   terraform:
     name: 'Terraform CI'
@@ -132,4 +135,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-          publish-profile: ${{ secrets.GET_NEXT_ORDER_FACADE_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.GET_NEXT_CORE_FACADE_PUBLISH_PROFILE }}
