@@ -120,3 +120,15 @@ resource "azurerm_application_insights" "remanufacturing" {
   application_type    = "web"
   tags                = local.remanufacturing_tags
 }
+
+# -----------------------------------------------------------------------------
+# Service Bus
+# -----------------------------------------------------------------------------
+
+resource "azurerm_servicebus_namespace" "remanufacturing" {
+  name                = lower("${module.service_bus_namespace.name.abbreviation}-Remanufacturing${var.resource_name_suffix}-${var.azure_environment}-${module.azure_regions.region.region_short}")
+  location            = azurerm_resource_group.remanufacturing.location
+  resource_group_name = azurerm_resource_group.remanufacturing.name
+  sku                 = "Standard"
+  tags                = local.remanufacturing_tags
+}

@@ -1,0 +1,95 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'infra/**'
+      - 'src/**'
+
+jobs:
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      terraform: ${{ steps.filter.outputs.terraform }}
+      production-schedule-facade: ${{ steps.filter.outputs.production-schedule-facade }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            terraform:
+              - 'infra/**'
+            production-schedule-facade:
+              - 'src/ProductionSchedule/**'
+
+  terraform:
+    name: 'Terraform CI'
+    needs: paths-filter
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    if: needs.paths-filter.outputs.terraform == 'true'
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v4
+  
+      # Install the latest version of Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+  
+      # Initialize the Terraform project
+      - name: Terraform Init
+        run: terraform init -backend-config="resource_group_name=${{ secrets.TERRAFORM_RESOURCE_GROUP }}" -backend-config="storage_account_name=${{ secrets.TERRAFORM_STORAGE_ACCOUNT_NAME }}" -backend-config="container_name=terraform-state" -backend-config="key=remanufacturing.tfstate"
+        working-directory: ./infra
+  
+      # Validate the Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./infra
+  
+      # Generate and show an execution plan
+      - name: Terraform Plan
+        run: terraform plan --var-file=gh.tfvars
+        working-directory: ./infra
+
+  production-schedule-facade:
+    name: 'Production Schedule Facade CI'
+    needs: paths-filter
+    runs-on: ubuntu-latest
+    if: needs.paths-filter.outputs.production-schedule-facade == 'true'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ./src/ProductionSchedule
+
+    - name: Build project
+      run: dotnet build ProductionScheduleFacade.sln --configuration Release
+      working-directory: ./src/ProductionSchedule
+      
+    - name: Publish artifacts
+      run: dotnet publish --configuration Release --output ./publish
+      working-directory: ./src/ProductionSchedule
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: csharp-artifacts
+        path: ./publish
