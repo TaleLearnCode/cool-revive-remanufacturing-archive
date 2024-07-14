@@ -53,27 +53,27 @@ resource "azurerm_storage_table_entity" "production_schedule_pod123" {
 # Production Schedule Facade
 # ------------------------------------------------------------------------------
 
-module "production_schedule_facade" {
-  source = "./modules/flex-function"
-
-  app_configuration_id           = azurerm_app_configuration.remanufacturing.id
-  app_insights_connection_string = azurerm_application_insights.remanufacturing.connection_string
-  azure_environment              = var.azure_environment
-  azure_region                   = var.azure_region
-  function_app_name              = "ProductionScheduleFacade"
-  key_vault_id                   = azurerm_key_vault.remanufacturing.id
-  resource_group_name            = azurerm_resource_group.global.name
-  resource_name_suffix           = var.resource_name_suffix
-  storage_account_name           = "psf"
-  tags                           = local.remanufacturing_tags
-  app_settings                  = [
-    {
-      name  = "ServiceBusConnectionString",
-      value = "service-bus-connection-string"
-    },
-    {
-      name  = "OrderNextCore_TopicName",
-      value = "order-next-core-topic-name"
-    }
-  ]
-}
+#module "production_schedule_facade" {
+#  source = "./modules/flex-function"
+#
+#  app_configuration_id           = azurerm_app_configuration.remanufacturing.id
+#  app_insights_connection_string = azurerm_application_insights.remanufacturing.connection_string
+#  azure_environment              = var.azure_environment
+#  azure_region                   = var.azure_region
+#  function_app_name              = "ProductionScheduleFacade"
+#  key_vault_id                   = azurerm_key_vault.remanufacturing.id
+#  resource_group_name            = azurerm_resource_group.global.name
+#  resource_name_suffix           = var.resource_name_suffix
+#  storage_account_name           = "psf"
+#  tags                           = local.remanufacturing_tags
+#  app_settings                  = [
+#    {
+#      name  = "ServiceBusConnectionString",
+#      value = "service-bus-connection-string"
+#    },
+#    {
+#      name  = "OrderNextCore_TopicName",
+#      value = "order-next-core-topic-name"
+#    }
+#  ]
+#}
