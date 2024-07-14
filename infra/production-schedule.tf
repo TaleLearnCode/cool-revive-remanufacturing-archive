@@ -39,13 +39,13 @@ resource "azurerm_storage_table_entity" "production_schedule_pod123" {
   partition_key    = "pod123_${local.current_date}"
   row_key          = count.index + 1
   entity = {
-    "podId"    = "pod123",
-    "date"     = local.current_date,
-    "sequence" = count.index,
-    "model"    = "Model 3",
-    "coreId"   = local.core_ids[count.index],
-    "finishedProductId" = random_string.finished_product_id.result,
-    "status"   = "Scheduled",
+    "PodId"    = "pod123",
+    "Date"     = local.current_date,
+    "Sequence" = count.index,
+    "Model"    = "Model 3",
+    "CoreId"   = local.core_ids[count.index],
+    "FinishedProductId" = random_string.finished_product_id.result,
+    "Status"   = "Scheduled",
   }
 }
 
