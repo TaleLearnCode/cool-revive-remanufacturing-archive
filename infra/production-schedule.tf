@@ -16,8 +16,10 @@ resource "azurerm_app_configuration_key" "production_schedule_table_name" {
   key                    = "ProductionSchedule:Storage:TableName"
   label                  = var.azure_environment
   value                  = azurerm_storage_table.production_schedule.name
+  lifecycle {
+    ignore_changes = [configuration_store_id]
+  }
 }
-
 locals {
   current_date = formatdate("YYYY-MM-DD", timestamp())
   core_ids = {
@@ -68,7 +70,7 @@ module "production_schedule_facade" {
   azure_region                   = var.azure_region
   function_app_name              = "ProductionScheduleFacade"
   key_vault_id                   = azurerm_key_vault.remanufacturing.id
-  resource_group_name            = azurerm_resource_group.global.name
+  resource_group_name            = azurerm_resource_group.remanufacturing.name
   resource_name_suffix           = var.resource_name_suffix
   storage_account_name           = "psf"
   tags                           = local.remanufacturing_tags
@@ -80,5 +82,5 @@ module "production_schedule_facade" {
     "TableConnectionString"       = azurerm_storage_account.global.primary_connection_string
     "ProductionScheduleTableName" = azurerm_storage_table.production_schedule.name
   }
-
+  depends_on = [ azurerm_resource_group.remanufacturing ]
 }

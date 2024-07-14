@@ -20,6 +20,9 @@ resource "azurerm_app_configuration_key" "get_next_core_topic_name" {
   key                    = "ServiceBus:Topic:GetNextCore"
   label                  = var.azure_environment
   value                  = azurerm_servicebus_topic.get_next_core.name
+  lifecycle {
+    ignore_changes = [configuration_store_id]
+  }
 }
 
 # ------------------------------------------------------------------------------
@@ -34,7 +37,7 @@ module "get_next_core_function_app" {
   azure_region                   = var.azure_region
   function_app_name              = "GetNextCore"
   key_vault_id                   = azurerm_key_vault.remanufacturing.id
-  resource_group_name            = azurerm_resource_group.global.name
+  resource_group_name            = azurerm_resource_group.remanufacturing.name
   resource_name_suffix           = var.resource_name_suffix
   storage_account_name           = "psf"
   tags                           = local.remanufacturing_tags
@@ -44,5 +47,5 @@ module "get_next_core_function_app" {
   app_settings = {
     "GetNextCoreTopicName"       = azurerm_servicebus_topic.get_next_core.name
   }
-
+  depends_on = [ azurerm_resource_group.remanufacturing ]
 }
