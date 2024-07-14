@@ -7,8 +7,6 @@ using Remanufacturing.OrderNextCore.Services;
 using Remanufacturing.Responses;
 using System.Text.Json;
 
-// Comment to cause a change
-
 namespace Remanufacturing.OrderNextCore.Functions;
 
 public class GetNextCore(ILogger<GetNextCore> logger, GetNextCoreServices getNextCoreServices)
