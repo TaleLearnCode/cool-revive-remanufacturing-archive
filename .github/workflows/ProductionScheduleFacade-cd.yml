@@ -8,7 +8,7 @@ on:
       - 'src/ProductionSchedule/**'
 env:
   AZURE_FUNCTIONAPP_NAME: 'func-ProductionScheduleFacade649-gh-use2'
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/ProductionSchedule/ProductionScheduleFacade.Functions/ProductionScheduleFacade.Functions.csproj'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/ProductionSchedule/ProductionScheduleFacade.Functions'
   DOTNET_VERSION: '8.0.x'
 
 jobs:
