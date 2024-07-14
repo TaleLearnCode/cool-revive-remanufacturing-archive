@@ -56,3 +56,8 @@ module "service_bus_topic" {
   source = "git::https://github.com/TaleLearnCode/azure-resource-types.git"
   resource_type = "service-bus-topic"
 }
+
+module "service_bus_topic_subscription" {
+  source = "git::https://github.com/TaleLearnCode/azure-resource-types.git"
+  resource_type = "service-bus-topic-subscription"
+}
