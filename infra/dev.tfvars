@@ -1,6 +1,6 @@
 azure_region         = "eastus2"
 azure_environment    = "gh"
-resource_name_suffix = "649"
+resource_name_suffix = "329"
 apim_publisher_name  = "Cool Revive"
 apim_publisher_email = "chadgreen@chadgreen.com"
 apim_sku_name        = "Developer_1"

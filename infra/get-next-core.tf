@@ -25,6 +25,55 @@ resource "azurerm_app_configuration_key" "get_next_core_topic_name" {
   }
 }
 
+resource "azurerm_servicebus_topic_authorization_rule" "get_next_core_sender" {
+  name     = "GetNextCoreSender"
+  topic_id = azurerm_servicebus_topic.get_next_core.id
+  listen   = false
+  send     = true
+  manage   = false
+}
+
+module "get_next_core_sender_connection_string" {
+  source                 = "./modules/app-config-secret"
+  app_config_label       = var.azure_environment
+  app_config_key         = "ServiceBus:Topic:GetNextCore:SenderConnectionString"
+  configuration_store_id = azurerm_app_configuration.remanufacturing.id
+  key_vault_id           = azurerm_key_vault.remanufacturing.id
+  secret_name            = "ServiceBus-Topic-GetNextCore-SenderConnectionString"
+  secret_value            = azurerm_servicebus_topic_authorization_rule.get_next_core_sender.primary_connection_string
+}
+
+resource "azurerm_servicebus_topic_authorization_rule" "get_next_core_listener" {
+  name     = "GetNextCoreListener"
+  topic_id = azurerm_servicebus_topic.get_next_core.id
+  listen   = true
+  send     = false
+  manage   = false
+}
+
+module "get_next_core_listener_connection_string" {
+  source                 = "./modules/app-config-secret"
+  app_config_label       = var.azure_environment
+  app_config_key         = "ServiceBus:Topic:GetNextCore:ListenerConnectionString"
+  configuration_store_id = azurerm_app_configuration.remanufacturing.id
+  key_vault_id           = azurerm_key_vault.remanufacturing.id
+  secret_name            = "ServiceBus-Topic-GetNextCore-ListenerConnectionString"
+  secret_value            = azurerm_servicebus_topic_authorization_rule.get_next_core_sender.primary_connection_string
+}
+
+resource "azurerm_servicebus_subscription" "get_next_core" {
+  name               = "${module.service_bus_topic_subscription.name.abbreviation}-GetNextCore-${var.azure_environment}-${module.azure_regions.region.region_short}"
+  topic_id           = azurerm_servicebus_topic.get_next_core.id
+  max_delivery_count = 10
+}
+
+#resource "azurerm_servicebus_subscription_rule" "get_next_core_pod123" {
+#  name            = "${module.service_bus_topic_subscription.name.abbreviation}-GetNextCore_Pod123-${var.azure_environment}-${module.azure_regions.region.region_short}"
+#  subscription_id = azurerm_servicebus_subscription.get_next_core.id
+#  filter_type     = "SqlFilter"
+#  sql_filter      = "PodId='Pod123'"
+#}
+
 # ------------------------------------------------------------------------------
 # Get Next Core Function App
 # ------------------------------------------------------------------------------
@@ -42,9 +91,11 @@ module "get_next_core_function_app" {
   storage_account_name           = "psf"
   tags                           = local.remanufacturing_tags
   #app_settings = {
+  #  "ServiceBusConnectionString" = "@Microsoft.AppConfiguration(Endpoint=${azurerm_app_configuration.remanufacturing.endpoint}; Key=${azurerm_app_configuration_key.get_next_core_topic_name.key}; Label=${azurerm_app_configuration_key.get_next_core_topic_name.label})",
   #  "GetNextCoreTopicName" = "@Microsoft.AppConfiguration(Endpoint=${azurerm_app_configuration.remanufacturing.endpoint}; Key=${azurerm_app_configuration_key.get_next_core_topic_name.key}; Label=${azurerm_app_configuration_key.get_next_core_topic_name.label})",
   #}
   app_settings = {
+    "ServiceBusConnectionString" = azurerm_servicebus_topic_authorization_rule.get_next_core_sender.primary_connection_string
     "GetNextCoreTopicName"       = azurerm_servicebus_topic.get_next_core.name
   }
   depends_on = [ azurerm_resource_group.remanufacturing ]
