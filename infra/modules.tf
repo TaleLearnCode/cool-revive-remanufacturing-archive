@@ -51,3 +51,8 @@ module "storage_account" {
   source        = "git::https://github.com/TaleLearnCode/azure-resource-types.git"
   resource_type = "storage-account"
 }
+
+module "service_bus_topic" {
+  source = "git::https://github.com/TaleLearnCode/azure-resource-types.git"
+  resource_type = "service-bus-topic"
+}
