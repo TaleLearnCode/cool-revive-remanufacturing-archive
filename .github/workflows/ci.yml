@@ -62,7 +62,7 @@ jobs:
   
       # Generate and show an execution plan
       - name: Terraform Plan
-        run: terraform plan --var-file=gh.tfvars
+        run: terraform plan --var-file=dev.tfvars
         working-directory: ./infra
 
   production-schedule-facade:

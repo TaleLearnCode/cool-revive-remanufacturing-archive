@@ -59,7 +59,7 @@ jobs:
   
       # Generate and show an execution plan
       #- name: Terraform Plan
-      #  run: terraform plan --var-file=gh.tfvars -out=tfplan
+      #  run: terraform plan --var-file=dev.tfvars -out=tfplan
       #  working-directory: ./infra
   
       #- name: Terraform Apply
@@ -72,7 +72,7 @@ jobs:
     name: 'Production Schedule Facade CI'
     needs: paths-filter
     env:
-      AZURE_FUNCTIONAPP_NAME: 'func-ProductionScheduleFacade649-gh-use2'
+      AZURE_FUNCTIONAPP_NAME: 'func-ProductionScheduleFacade329-gh-use2'
       AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/ProductionSchedule/ProductionScheduleFacade.Functions'
       DOTNET_VERSION: '8.0.x'
     runs-on: ubuntu-latest
