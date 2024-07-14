@@ -22,7 +22,7 @@ jobs:
       run: dotnet restore
 
     - name: Build project
-      run: dotnet build src/ProductionSchedule/ProductionScheduleFacade.Functions/ProductionScheduleFacade.Functions.csproj --configuration Release
+      run: dotnet build src/ProductionSchedule/ProductionScheduleFacade.sln --configuration Release
 
     - name: Publish artifacts
       run: dotnet publish --configuration Release --output ./publish
