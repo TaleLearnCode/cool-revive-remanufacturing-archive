@@ -72,8 +72,13 @@ module "production_schedule_facade" {
   resource_name_suffix           = var.resource_name_suffix
   storage_account_name           = "psf"
   tags                           = local.remanufacturing_tags
+  #app_settings = {
+  #  "TableConnectionString"       = "@Microsoft.AppConfiguration(Endpoint=${azurerm_app_configuration.remanufacturing.endpoint}; Key=${module.global_storage_account_connection_string.key}; Label=${module.global_storage_account_connection_string.label})",
+  #  "ProductionScheduleTableName" = "@Microsoft.AppConfiguration(Endpoint=${azurerm_app_configuration.remanufacturing.endpoint}; Key=${azurerm_app_configuration_key.production_schedule_table_name.key}; Label=${azurerm_app_configuration_key.production_schedule_table_name.label})",
+  #}
   app_settings = {
-    "TableConnectionString"       = "@Microsoft.AppConfiguration(Endpoint=${azurerm_app_configuration.remanufacturing.endpoint}; Key=${module.global_storage_account_connection_string.key}; Label=${module.global_storage_account_connection_string.label})",
-    "ProductionScheduleTableName" = "@Microsoft.AppConfiguration(Endpoint=${azurerm_app_configuration.remanufacturing.endpoint}; Key=${azurerm_app_configuration_key.production_schedule_table_name.key}; Label=${azurerm_app_configuration_key.production_schedule_table_name.label})",
+    "TableConnectionString"       = azurerm_storage_account.global.primary_connection_string
+    "ProductionScheduleTableName" = azurerm_storage_table.production_schedule.name
   }
+
 }
