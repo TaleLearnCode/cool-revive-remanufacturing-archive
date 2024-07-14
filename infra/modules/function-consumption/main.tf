@@ -75,7 +75,9 @@ resource "azurerm_linux_function_app" "function_app" {
     "AzureWebJobsStorage__accountName" = azurerm_storage_account.function_storage.name,
     "APPLICATIONINSIGHTS_CONNECTION_STRING" = var.app_insights_connection_string
   }, var.app_settings)
-
+  lifecycle {
+    ignore_changes = [storage_uses_managed_identity]
+  }
 }
 
 # #############################################################################
