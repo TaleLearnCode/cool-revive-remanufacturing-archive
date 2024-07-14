@@ -4,7 +4,8 @@ on:
   pull_request:
     branches:
       - develop
-
+    paths:
+      - 'src/ProductionSchedule/**'
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - develop
-
+    paths:
+      - 'src/ProductionSchedule/**'
 env:
   AZURE_FUNCTIONAPP_NAME: 'func-ProductionScheduleFacade649-gh-use2'
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/ProductionSchedule/ProductionScheduleFacade.Functions/ProductionScheduleFacade.Functions.csproj'
