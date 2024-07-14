@@ -101,15 +101,15 @@ jobs:
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
           publish-profile: ${{ secrets.PRODUCTION_SCHEDULE_FACADE_PUBLISH_PROFILE }}
 
-  get-next-order:
-    name: 'Get Next Order CI'
+  get-next-core:
+    name: 'Get Next Core CI'
     needs: paths-filter
     env:
-      AZURE_FUNCTIONAPP_NAME: 'func-GetNextOrder329-gh-use2'
-      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/GetNextOrder/GetNextOrder.Functions'
+      AZURE_FUNCTIONAPP_NAME: 'func-GetNextCore329-gh-use2'
+      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/GetNextCore/GetNextCore.Functions'
       DOTNET_VERSION: '8.0.x'
     runs-on: ubuntu-latest
-    if: needs.paths-filter.outputs.get-next-order == 'true'
+    if: needs.paths-filter.outputs.get-next-core == 'true'
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v3
