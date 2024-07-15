@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "GetNextCoreHandler.Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7067",
+      "launchBrowser": false
+    }
+  }
+}
